@@ -944,10 +944,14 @@ public class Helper {
             PackageManager pm = context.getPackageManager();
             if (pm.queryIntentActivities(intent, 0).size() == 1)
                 return intent;
-            else
-                return Intent.createChooser(intent, context.getString(R.string.title_select_app));
-        } else
-            return Intent.createChooser(intent, context.getString(R.string.title_select_app));
+        }
+
+        Intent chooser = Intent.createChooser(intent, context.getString(R.string.title_select_app));
+        if ((intent.getFlags() & Intent.FLAG_GRANT_READ_URI_PERMISSION) != 0)
+            chooser.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        if ((intent.getFlags() & Intent.FLAG_GRANT_WRITE_URI_PERMISSION) != 0)
+            chooser.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        return chooser;
     }
 
     static void share(Context context, File file, String type, String name) {
